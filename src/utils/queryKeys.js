@@ -1,0 +1,16 @@
+export const queryKeys = {
+  categories: ['categories'],
+  dashboard: ['dashboard'],
+  forumThreads: (params) => ['forum-threads', params],
+  threadDetail: (threadId) => ['thread-detail', threadId],
+  threadComments: (threadId, sort) => ['thread-comments', threadId, sort],
+  profile: (username) => ['profile', username],
+  profileByUserId: (userId) => ['profile-user-id', userId],
+  profileThreads: (username) => ['profile-threads', username],
+  profileComments: (username) => ['profile-comments', username],
+  profileBookmarks: (userId) => ['profile-bookmarks', userId],
+  notifications: (userId) => ['notifications', userId],
+  adminStats: ['admin-stats'],
+  adminUsers: ['admin-users'],
+  adminReports: ['admin-reports'],
+}
