@@ -125,7 +125,7 @@ export default function CreateThreadPage() {
 
         <Input
           label="Tags (pisahkan dengan koma)"
-          placeholder="react, supabase, auth"
+          placeholder="pekerjaan, data diri, kesehatan"
           {...form.register('tags')}
         />
 
