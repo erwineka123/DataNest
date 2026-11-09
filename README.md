@@ -46,6 +46,34 @@ npm run dev
    - `attachments` (public/private sesuai kebutuhan)
 4. Enable Realtime for table `notifications`.
 
+## Threads API
+
+Vercel automatically deploys the serverless function at `api/threads.js` as:
+
+```text
+GET https://<your-vercel-domain>/api/threads
+```
+
+Optional query parameters:
+
+- `page` (default `1`)
+- `pageSize` (default `10`, maximum `50`)
+- `search` (searches thread titles)
+- `category` (category UUID)
+- `sort`: `newest`, `oldest`, `most_popular`, `most_viewed`, or `unanswered`
+
+Example:
+
+```text
+https://<your-vercel-domain>/api/threads?page=1&pageSize=10&sort=newest
+```
+
+The response contains `data`, `total`, and `totalPages`. The function uses
+`SUPABASE_URL` and `SUPABASE_ANON_KEY` when set; otherwise it uses the existing
+`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` variables. Set these in Vercel
+Project Settings → Environment Variables, then redeploy. Database access remains
+subject to the Supabase RLS policies.
+
 ## Main Features
 
 - Dashboard (stats, trending threads, latest, categories)
