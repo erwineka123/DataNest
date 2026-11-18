@@ -12,6 +12,34 @@ function sendJson(res, status, body) {
   res.status(status).json(body)
 }
 
+export function formatThreadContent(content) {
+  return content
+    .replace(/\\u003c/gi, '<')
+    .replace(/\\u003e/gi, '>')
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<li\b[^>]*>/gi, '- ')
+    .replace(/<\/(p|div|li|h[1-6]|blockquote|pre|tr)>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;|&#160;|&#xA0;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&#(\d+);|&#x([0-9a-f]+);/gi, (entity, decimal, hexadecimal) => {
+      const codePoint = Number.parseInt(decimal ?? hexadecimal, decimal ? 10 : 16)
+      return codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint)
+        : entity
+    })
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n')
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
@@ -114,7 +142,10 @@ export default async function handler(req, res) {
 
     const total = count ?? 0
     return sendJson(res, 200, {
-      data: data ?? [],
+      data: (data ?? []).map((thread) => ({
+        ...thread,
+        content: formatThreadContent(thread.content ?? ''),
+      })),
       total,
       totalPages: Math.max(1, Math.ceil(total / pageSize)),
     })
