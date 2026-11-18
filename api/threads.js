@@ -75,7 +75,7 @@ export default async function handler(req, res) {
     let query = supabase
       .from('threads')
       .select(
-        'id,title,excerpt,created_at,comment_count,like_count,view_count,tags,categories!threads_category_id_fkey(id,name,slug),profiles!threads_author_id_fkey(username,avatar_url)',
+        'id,title,excerpt,content,created_at,comment_count,like_count,view_count,tags,categories!threads_category_id_fkey(id,name,slug),profiles!threads_author_id_fkey(username,avatar_url)',
         { count: 'exact' },
       )
       .range(from, to)
